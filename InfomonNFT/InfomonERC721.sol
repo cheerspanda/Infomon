@@ -19,7 +19,7 @@ contract InfomonERC721 is ERC721Common, NFTLaunchpadCommon {
         _setupRole(PAUSER_ROLE, msg.sender);
     }
 
-    // prepare for ronin launch pad
+    /// @dev Mint NFTs for ronin launchpad.
     function mintLaunchpad(
         address to,
         uint256 quantity,
@@ -43,6 +43,8 @@ contract InfomonERC721 is ERC721Common, NFTLaunchpadCommon {
     //    - to: The address that will receive the minted token
     // Returns: 
     //    - uint256: The newly minted token's ID
+    // Events:
+    //    - Emits a MintToClaimerCalled event indicating the recipient address, tokenId, and amount of tokens minted.
     function mintToClaimer(address to)
         external
         onlyRole(MINTER_ROLE) // Ensures the caller has the MINTER_ROLE
