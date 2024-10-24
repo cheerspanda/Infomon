@@ -51,6 +51,7 @@ contract InfomonERC1155 is ERC1155, AccessControl, NFTLaunchpadCommon {
             amounts[i] = amounts[i];
         }
     }
+    
     // Function: mintToClaimer
     // Purpose: Allows accounts with the MINTER_ROLE to mint tokens for a specified address `to_`.
     // Parameters: 
