@@ -23,34 +23,6 @@ contract InfomonERC1155 is ERC1155, AccessControl, NFTLaunchpadCommon {
         _setupRole(DEFAULT_ADMIN_ROLE, admin);
         _setupRole(MINTER_ROLE, minter);
     }
-
-    /// @dev Mint NFTs for ronin launchpad.
-    function mintLaunchpad(
-        address to,
-        uint256, /* quantity */
-        bytes calldata extraData
-    )
-        external
-        onlyRole(MINTER_ROLE)
-        returns (uint256[] memory tokenIds, uint256[] memory amounts)
-    {
-        (uint256[] memory mintTokenIds, uint256[] memory mintAmounts) = abi
-            .decode(extraData, (uint256[], uint256[]));
-
-        require(
-            mintTokenIds.length == mintAmounts.length,
-            "Mismatched tokenIds and amounts length"
-        );
-
-        tokenIds = new uint256[](mintTokenIds.length);
-        amounts = new uint256[](mintAmounts.length);
-
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            _mint(to, tokenIds[i], amounts[i], "");
-            tokenIds[i] = tokenIds[i];
-            amounts[i] = amounts[i];
-        }
-    }
     
     // Function: mintToClaimer
     // Purpose: Allows accounts with the MINTER_ROLE to mint tokens for a specified address `to_`.

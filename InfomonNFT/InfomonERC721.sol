@@ -19,24 +19,6 @@ contract InfomonERC721 is ERC721Common, NFTLaunchpadCommon {
         _setupRole(PAUSER_ROLE, msg.sender);
     }
 
-    /// @dev Mint NFTs for ronin launchpad.
-    function mintLaunchpad(
-        address to,
-        uint256 quantity,
-        bytes calldata /* extraData */
-    )
-        external
-        onlyRole(MINTER_ROLE)
-        returns (uint256[] memory tokenIds, uint256[] memory amounts)
-    {
-        tokenIds = new uint256[](quantity);
-        amounts = new uint256[](quantity);
-        for (uint256 i; i < quantity; ++i) {
-            tokenIds[i] = _mintFor(to);
-            amounts[i] = 1;
-        }
-    }
-
     // Function: mintToClaimer
     // Purpose: Allows accounts with the MINTER_ROLE to mint tokens for a specified address `to`
     // Parameters: 
