@@ -3,9 +3,8 @@ pragma solidity ^0.8.19;
 
 import {ERC1155} from "@openzeppelin/contracts@4.8.2/token/ERC1155/ERC1155.sol";
 import {AccessControl} from "@openzeppelin/contracts@4.8.2/access/AccessControl.sol";
-import {NFTLaunchpadCommon} from "./Infomon/src/launchpad/NFTLaunchpadCommon.sol";
 
-contract InfomonERC1155 is ERC1155, AccessControl, NFTLaunchpadCommon {
+contract InfomonERC1155 is ERC1155, AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     // Event to log the minting process
@@ -15,13 +14,18 @@ contract InfomonERC1155 is ERC1155, AccessControl, NFTLaunchpadCommon {
         uint256 amount
     );
 
+    // Event to log the burning process
+    event BurnCalled(
+        address indexed from,
+        uint256 tokenId,
+        uint256 amount
+    );
+
     constructor(
-        address admin,
-        address minter,
         string memory uri_
     ) ERC1155(uri_) {
-        _setupRole(DEFAULT_ADMIN_ROLE, admin);
-        _setupRole(MINTER_ROLE, minter);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(MINTER_ROLE, msg.sender);
     }
     
     // Function: mintToClaimer
@@ -45,13 +49,31 @@ contract InfomonERC1155 is ERC1155, AccessControl, NFTLaunchpadCommon {
         return (tokenId_, amount_);
     }
 
+    // Function: burn
+    // Purpose: Allows the token holder to burn a specified amount of tokens of a specific token ID.
+    // Parameters:
+    //    - tokenId_: The ID of the token type to burn.
+    //    - amount_: The quantity of tokens to burn.
+    // Events:
+    //    - Emits a BurnCalled event indicating the token holder's address, tokenId, and amount of tokens burned.
+    function burn(
+        uint256 tokenId_,
+        uint256 amount_
+    ) external {
+        _burn(msg.sender, tokenId_, amount_);
+        emit BurnCalled(msg.sender, tokenId_, amount_);
+    }
+
     function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
-        override(ERC1155, AccessControl, NFTLaunchpadCommon)
+        override(ERC1155, AccessControl)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
     }
+
+
+
 }
